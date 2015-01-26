@@ -26,14 +26,14 @@ How-To
     ln -s csv_<version> csv_current
 
     # this will take a while
-    python convertcn.py csv_current/assertions/
+    python neo_concept/convertcn.py csv_current/assertions/
 
     # get latest neo4j (tested with neo4j-community-2.2.0-M02)
-    wget http://neo4j.com/artifact.php?name=neo4j-community-2.2.0-M02-unix.tar.gz
-    tar xvf neo4j-community-2.2.0-M02-unix.tar.gz
+    curl -O -J -L http://neo4j.com/artifact.php?name=neo4j-community-2.2.0-M02-unix.tar.gz
+    tar xf neo4j-community-2.2.0-M02-unix.tar.gz
 
     # import nodes.csv and edges.csv using the new import tool -- this will take a while too
-    neo4j-community-2.2.0-M02/bin/neo4j-import --into data/graph.db --nodes nodes.csv --relationships edges.csv --delimiter "TAB"
+    neo4j-community-2.2.0-M02/bin/neo4j-import --into neo4j-community-2.2.0-M02/data/graph.db --nodes nodes.csv --relationships edges.csv --delimiter "TAB"
 
     # start neo4j
     neo4j-community-2.2.0-M02/bin/neo4j start
