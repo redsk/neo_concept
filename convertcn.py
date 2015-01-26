@@ -4,6 +4,7 @@ import os
 import glob
 import re
 import operator
+import sys
 
 nodeid = 0
 nodes = {}
@@ -49,10 +50,10 @@ def cn5ToCSV(inputDir):
     global sources
     sources = {}
 
-    nf = open('../nodes.csv', "w")
+    nf = open('nodes.csv', "w")
     #nf.write('id\tconcept\n')
     nf.write('id:ID\t:LABEL\n')
-    ef = open('../edges.csv', "w")
+    ef = open('edges.csv', "w")
     #ef.write('idfrom\tidto\ttype\tcontext\tweight\tsurface\n')
     ef.write(':START_ID\t:END_ID\t:TYPE\tcontext\tweight:float\tsource\tsurface\n')
     
@@ -80,7 +81,7 @@ def cn5ToCSV(inputDir):
 
     sorted_sources = sorted(sources.items(), key=operator.itemgetter(1))
     sorted_sources.reverse()
-    sf = open('../sources.csv', "w")
+    sf = open('sources.csv', "w")
     for source in sorted_sources:
         sf.write(source[0] + '\t' + str(source[1]) + '\n')
     sf.close()
@@ -95,8 +96,7 @@ def escFloat(s):
     return re.sub(r"L", "", s)    
 
 def main():
-    cn5ToCSV('../csv_current/assertions/')
-
+    cn5ToCSV(sys.argv[1])
 
 if __name__ == "__main__":
     main()
