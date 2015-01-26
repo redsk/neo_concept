@@ -42,5 +42,6 @@ How-To
 Goto localhost:7474 to see the graph.
 
 You can now query the database. Example:
+
 MATCH (sushi {id:"/c/en/sushi"}), sushi-[r]->other_concepts
 RETURN sushi.id, other_concepts.id, type(r), r.context, r.weight, r.surface
