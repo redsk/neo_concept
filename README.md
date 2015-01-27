@@ -39,7 +39,9 @@ How-To
     neo4j-community-2.2.0-M02/bin/neo4j start
 
 
-Goto localhost:7474 to see the graph.
+Goto localhost:7474 to see the graph. Create and index on Concepts for performance reasons:
+
+    CREATE INDEX ON :Concept(id)
 
 You can now query the database. Example:
 
