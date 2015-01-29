@@ -25,12 +25,15 @@ How-To
     tar jxvf conceptnet5_flat_csv_5.3.tar.bz2
     ln -s csv_<version> csv_current
 
+    # "Usage:
+    # python convertcn.py <input directory> [ALL_LANGUAGES]"
+    # If the flag ALL_LANGUAGES is not set, only English concepts will be converted
     # this will take a while
     python neo_concept/convertcn.py csv_current/assertions/
 
     # get latest neo4j (tested with neo4j-community-2.2.0-M02)
     curl -O -J -L http://neo4j.com/artifact.php?name=neo4j-community-2.2.0-M02-unix.tar.gz
-    tar xf neo4j-community-2.2.0-M02-unix.tar.gz
+    tar zxf neo4j-community-2.2.0-M02-unix.tar.gz
 
     # import nodes.csv and edges.csv using the new import tool -- this will take a while too
     neo4j-community-2.2.0-M02/bin/neo4j-import --into neo4j-community-2.2.0-M02/data/graph.db --nodes nodes.csv --relationships edges.csv --delimiter "TAB"

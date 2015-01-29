@@ -40,7 +40,12 @@ def add_source(source):
     else:
         sources[source] = 1
 
-def cn5ToCSV(inputDir):
+def isEnglish(concept):
+    if concept.split('/')[2] == 'en':
+        return True
+    return False
+
+def cn5ToCSV(inputDir, ALL_LANGUAGES=False):
     global nodes 
     global nodeid 
     global nf
@@ -66,15 +71,22 @@ def cn5ToCSV(inputDir):
                 #fromN = get_node_id(esc(tokens[2]))
                 #toN = get_node_id(esc(tokens[3]))
 
-                fromN = esc(tokens[2])
-                toN = esc(tokens[3])
-                add_node(fromN)
-                add_node(toN)
+                if (ALL_LANGUAGES or (isEnglish(tokens[2]) and isEnglish(tokens[3]))):
+                    fromN = esc(tokens[2])
+                    toN = esc(tokens[3])
+                    add_node(fromN)
+                    add_node(toN)
 
-                source = esc(tokens[8])
-                add_source(source)
+                    source = esc(tokens[8])
+                    add_source(source)
 
-                ef.write(str(fromN) + '\t' + str(toN) + '\t' + esc(tokens[1]) + '\t' + esc(tokens[4]) + '\t' + escFloat(tokens[5]) + '\t' + source + '\t' + esc(tokens[9]) + '\n')
+                    ef.write(str(fromN) + '\t' 
+                        + str(toN) + '\t' 
+                        + esc(tokens[1]) + '\t' 
+                        + esc(tokens[4]) + '\t' 
+                        + escFloat(tokens[5]) + '\t' 
+                        + source + '\t' 
+                        + esc(tokens[9]) + '\n')
     
     nf.close()
     ef.close()
@@ -96,7 +108,13 @@ def escFloat(s):
     return re.sub(r"L", "", s)    
 
 def main():
-    cn5ToCSV(sys.argv[1])
+    numargs = len(sys.argv)
+    if numargs == 3:
+        cn5ToCSV(sys.argv[1], True)
+    if numargs == 2:
+        cn5ToCSV(sys.argv[1], False)
+    if numargs < 2 or numargs > 3:
+        print "Usage:\npython convertcn.py <input directory> [ALL_LANGUAGES]\n"
 
 if __name__ == "__main__":
     main()
