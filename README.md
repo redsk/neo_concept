@@ -9,9 +9,11 @@ This rewrite does not use the [Bloom filter](http://en.wikipedia.org/wiki/Bloom_
 Pre-Requisites
 --------------
 
-- neo4j version 2.2 (needed for the [new import tool](http://neo4j.com/docs/2.2.0-M02/import-tool.html))
+- neo4j version 2.2 (needed for the [new import tool](http://neo4j.com/docs/2.2.0-M03/import-tool.html))
 - [ConceptNet 5.3](http://conceptnet5.media.mit.edu/downloads/current/) provide a list of assertions. 
 - regular Python, no dependencies
+
+Tested with neo4j-community-2.2.0-M02 and neo4j-community-2.2.0-M03.
 
 How-To 
 -------------------
@@ -31,15 +33,15 @@ How-To
     # this will take a while
     python neo_concept/convertcn.py csv_current/assertions/
 
-    # get latest neo4j (tested with neo4j-community-2.2.0-M02)
-    curl -O -J -L http://neo4j.com/artifact.php?name=neo4j-community-2.2.0-M02-unix.tar.gz
-    tar zxf neo4j-community-2.2.0-M02-unix.tar.gz
+    # get latest neo4j (tested with neo4j-community-2.2.0-M03)
+    curl -O -J -L http://neo4j.com/artifact.php?name=neo4j-community-2.2.0-M03-unix.tar.gz
+    tar zxf neo4j-community-2.2.0-M03-unix.tar.gz
 
     # import nodes.csv and edges.csv using the new import tool -- this will take a while too
-    neo4j-community-2.2.0-M02/bin/neo4j-import --into neo4j-community-2.2.0-M02/data/graph.db --nodes nodes.csv --relationships edges.csv --delimiter "TAB"
+    neo4j-community-2.2.0-M03/bin/neo4j-import --into neo4j-community-2.2.0-M03/data/graph.db --nodes nodes.csv --relationships edges.csv --delimiter "TAB"
 
     # start neo4j
-    neo4j-community-2.2.0-M02/bin/neo4j start
+    neo4j-community-2.2.0-M03/bin/neo4j start
 
 
 Goto localhost:7474 to see the graph. Create and index on Concepts for performance reasons:
