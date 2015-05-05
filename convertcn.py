@@ -60,8 +60,9 @@ def cn5ToCSV(inputDir, ALL_LANGUAGES=False):
     nf.write('id:ID\t:LABEL\n')
     ef = open('edges.csv', "w")
     #ef.write('idfrom\tidto\ttype\tcontext\tweight\tsurface\n')
-    ef.write(':START_ID\t:END_ID\t:TYPE\tcontext\tweight:float\tsource\tsurface\n')
-    
+    # ef.write(':START_ID\t:END_ID\t:TYPE\tcontext\tweight:float\tsource\tsurface\n')
+    ef.write(':START_ID\t:END_ID\t:TYPE\tweight:float\tsource\tsurface\n')
+   
     for filename in glob.glob(os.path.join(inputDir, '*.csv')):
         with open (filename, "r") as f:
             for line in f:
@@ -83,12 +84,33 @@ def cn5ToCSV(inputDir, ALL_LANGUAGES=False):
                     ef.write(str(fromN) + '\t' 
                         + str(toN) + '\t' 
                         + esc(tokens[1]) + '\t' 
-                        + esc(tokens[4]) + '\t' 
+                        #+ esc(tokens[4]) + '\t' 
                         + escFloat(tokens[5]) + '\t' 
                         + source + '\t' 
                         + esc(tokens[9]) + '\n')
     
+
+    # additional hierarchy edges added here
+    for n in nodes:
+        tokens = n.split("/")
+        if len(tokens) > 4:
+            baseterm = '"/' + tokens[1] + '/' + tokens[2] + '/' + tokens[3] + '"'
+            if baseterm in nodes:
+                ef.write(baseterm + '\t' + 
+                     n  + '\t' + # n already has quotes
+                    '"/r/DownHierarchy"' + '\t' + 
+                    #'"/ctx/all"' + '\t' + 
+                    str(10.0) + '\t' + 
+                    '""' + '""' + '\n')
+                ef.write(n + '\t' + # n already has quotes
+                    baseterm + '\t' + 
+                    '"/r/UpHierarchy"' + '\t' + 
+                    #'"/ctx/all"' + '\t' + 
+                    str(10.0) + '\t' + 
+                    '""' + '""' + '\n')
+
     nf.close()
+    ef.close()
     ef.close()
 
     sorted_sources = sorted(sources.items(), key=operator.itemgetter(1))
