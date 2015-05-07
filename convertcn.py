@@ -5,6 +5,7 @@ import glob
 import re
 import operator
 import sys
+import cPickle as pickle
 
 nodeid = 0
 nodes = {}
@@ -62,7 +63,12 @@ def cn5ToCSV(inputDir, ALL_LANGUAGES=False):
     #ef.write('idfrom\tidto\ttype\tcontext\tweight\tsurface\n')
     # ef.write(':START_ID\t:END_ID\t:TYPE\tcontext\tweight:float\tsource\tsurface\n')
     ef.write(':START_ID\t:END_ID\t:TYPE\tweight:float\tsource\tsurface\n')
-   
+
+
+    # the index starts with 1 because the first line is the header.
+    relsIdx = 1
+    relsDict = {}
+
     for filename in glob.glob(os.path.join(inputDir, '*.csv')):
         with open (filename, "r") as f:
             for line in f:
@@ -81,14 +87,23 @@ def cn5ToCSV(inputDir, ALL_LANGUAGES=False):
                     source = esc(tokens[8])
                     add_source(source)
 
+                    relType = esc(tokens[1])
+
                     ef.write(str(fromN) + '\t' 
                         + str(toN) + '\t' 
-                        + esc(tokens[1]) + '\t' 
+                        + relType + '\t' 
                         #+ esc(tokens[4]) + '\t' 
                         + escFloat(tokens[5]) + '\t' 
                         + source + '\t' 
                         + esc(tokens[9]) + '\n')
-    
+
+                    relType = relType[1:-1]
+                    if relType not in relsDict:
+                        relsDict[relType] = []
+                    relsDict[relType].append(relsIdx)
+                    relsIdx = relsIdx + 1
+
+    pickle.dump( relsDict, open("relsDict.p", "wb") )
 
     # additional hierarchy edges added here
     for n in nodes:
