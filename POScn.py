@@ -221,7 +221,7 @@ def main():
 
     start_corenlp = 'java -cp "*" -Xmx' + java_memory + 'g edu.stanford.nlp.pipeline.StanfordCoreNLP -annotators tokenize,ssplit,pos,lemma -file ../../neo4j-conceptnet5/converter/' + surfaceTextFilename + ' -outputFormat conll'
     corenlp = pexpect.spawn(start_corenlp, cwd=stanfordNLPdir)
-    corenlp.expect(pexpect.EOF)
+    corenlp.expect(pexpect.EOF, timeout=14400) # four hours timeout
 
     old = stanfordNLPdir + "/" + snlpOutFilename
     new = "./" + snlpOutFilename
