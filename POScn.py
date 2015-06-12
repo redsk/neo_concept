@@ -218,12 +218,14 @@ def main():
 
     relationLines, relsWithSurface = getSurfaceTexts(inputFilename, surfaceTextFilename)
 
-    start_corenlp = 'java -cp "*" -Xmx2g edu.stanford.nlp.pipeline.StanfordCoreNLP -annotators tokenize,ssplit,pos,lemma -file ../../neo4j-conceptnet5/converter/test.txt -outputFormat conll'
+    start_corenlp = 'java -cp "*" -Xmx2g edu.stanford.nlp.pipeline.StanfordCoreNLP -annotators tokenize,ssplit,pos,lemma -file ../../neo4j-conceptnet5/converter/' + surfaceTextFilename + ' -outputFormat conll'
     corenlp = pexpect.spawn(start_corenlp, cwd=stanfordNLPdir)
     corenlp.expect(pexpect.EOF)
 
     old = stanfordNLPdir + "/" + snlpOutFilename
     new = "./" + snlpOutFilename
+    #print old
+    #print new
     os.rename(old, new)
 
     generatePOSrelationsFile(relationsWithPOSfilename, snlpOutFilename, relationLines, relsWithSurface)
