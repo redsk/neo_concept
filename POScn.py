@@ -3,6 +3,8 @@
 import os
 #import cPickle as pickle
 import pexpect
+import sys
+
 
 def levenshtein(s1, s2):
     if len(s1) < len(s2):
@@ -47,9 +49,14 @@ def getSurfaceTexts(inputFilename, surfaceTextFilename):
         tokens = line.split('\t')
 
         # surface is at tokens[5], '""' means no surface text
-        if tokens[5] == '""\n':
-            relsWithSurface[i] = False
-            continue
+        try:
+            if tokens[5] == '""\n':
+                relsWithSurface[i] = False
+                continue
+        except:
+            print i, line
+            sys.exit("Error!!!")
+
 
         #print tokens[5]
 

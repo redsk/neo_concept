@@ -116,13 +116,13 @@ def cn5ToCSV(inputDir, ALL_LANGUAGES=False):
                     '"/r/DownHierarchy"' + '\t' + 
                     #'"/ctx/all"' + '\t' + 
                     str(10.0) + '\t' + 
-                    '""' + '""' + '\n')
+                    '""' + '\t' + '""' + '\n')
                 ef.write(n + '\t' + # n already has quotes
                     baseterm + '\t' + 
                     '"/r/UpHierarchy"' + '\t' + 
                     #'"/ctx/all"' + '\t' + 
                     str(10.0) + '\t' + 
-                    '""' + '""' + '\n')
+                    '""' + '\t' + '""' + '\n')
 
     nf.close()
     ef.close()
