@@ -208,6 +208,7 @@ def main():
     inputFilename = 'edges.csv'
     surfaceTextFilename = ''
     stanfordNLPdir = "../../stanford-corenlp-python/stanford-corenlp-full-2015-01-30"
+    java_memory = '8' # in GB
     ################
 
     baseName = inputFilename.split('.')[0]
@@ -218,7 +219,7 @@ def main():
 
     relationLines, relsWithSurface = getSurfaceTexts(inputFilename, surfaceTextFilename)
 
-    start_corenlp = 'java -cp "*" -Xmx2g edu.stanford.nlp.pipeline.StanfordCoreNLP -annotators tokenize,ssplit,pos,lemma -file ../../neo4j-conceptnet5/converter/' + surfaceTextFilename + ' -outputFormat conll'
+    start_corenlp = 'java -cp "*" -Xmx' + java_memory + 'g edu.stanford.nlp.pipeline.StanfordCoreNLP -annotators tokenize,ssplit,pos,lemma -file ../../neo4j-conceptnet5/converter/' + surfaceTextFilename + ' -outputFormat conll'
     corenlp = pexpect.spawn(start_corenlp, cwd=stanfordNLPdir)
     corenlp.expect(pexpect.EOF)
 
