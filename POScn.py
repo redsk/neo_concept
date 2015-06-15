@@ -198,7 +198,11 @@ class POScn():
         for i in range(0, self.rfCounterWithSurface):
             self.nf.readline()
 
+        self.inf = open(self.inputFilename, "r")
+        for i in range(0, self.rfCounter):
+            self.inf.readline()
 
+        # batch loop
         while True:
             print "rfCounter =", self.rfCounter
             print "rfCounterWithSurface = ", self.rfCounterWithSurface
@@ -212,6 +216,14 @@ class POScn():
             if self.rfCounterWithSurface == self.total_size:
                 break
 
+
+        if self.total_size == None: # that is, we have to do the processing till the end
+            while True:
+                relLine = self.inf.readline()
+                self.rf.write(relLine[:-1] + '\t""\t""\n')
+
+
+        self.inf.close()
         self.nf.close()
         self.rf.close()
 
@@ -251,9 +263,7 @@ class POScn():
         if self.rfCounter == 0:
             self.rf.write(':START_ID\t:END_ID\t:TYPE\tweight:float\tsource\tsurface\tpos1\tpos2\n')
 
-        inf = open(self.inputFilename, "r")
-        for i in range(0, self.rfCounter):
-            inf.readline()
+
 
         #for i, relLine in enumerate(relationLines):
         #for n in range(0, self.batch_size):
@@ -266,7 +276,7 @@ class POScn():
                 break
             i = self.rfCounter + n
             n = n + 1
-            relLine = inf.readline()
+            relLine = self.inf.readline()
             if i is 0: # it's the header
                 continue
             if self.relsWithSurface[i] is False:
