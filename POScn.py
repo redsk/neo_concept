@@ -157,7 +157,10 @@ class POScn():
 
         pickle.dump( self.stats, open(self.POScountFilename, "wb") )
 
-        for t in self.stats:
+        #for t in self.stats:
+        #    print t, self.stats[t]
+
+        for t in sorted(self.stats, key=self.stats.get, reverse=True):
             print t, self.stats[t]
         
 
@@ -220,6 +223,8 @@ class POScn():
         if self.total_size == None: # that is, we have to do the processing till the end
             while True:
                 relLine = self.inf.readline()
+                if relLine == '':
+                    break
                 self.rf.write(relLine[:-1] + '\t""\t""\n')
 
 

@@ -13,7 +13,7 @@ normally the latter is **not** connected with the former with a relation. Theref
 A /r/DownHierarchy B
 B /r/UpHierarchy A
 
-Optionally, it is possible to perform Part-Of-Speech tagging of the two concepts within the surface text of every relation with the Stanford CoreNLP software. 
+Optionally, it is possible to perform Part-Of-Speech (POS) tagging of the two concepts within the surface text of every relation with the Stanford CoreNLP software. 
 
 Pre-Requisites
 --------------
@@ -47,14 +47,16 @@ How-To
     # stanfordNLPdir = "../../stanford-corenlp-python/stanford-corenlp-full-2015-01-30"
     # neoConceptRootForSNLP = '../../neo4j-conceptnet5/converter/'
     # modify the two variables above in POScn.py to fit your stanford nlp installation
-    # this will take a very long while and was tested with a java memory of 8GB
-    python neo_concept/POScn.py 
+    # the following commands will take a while and were tested with a java memory of 2GB
+    python neo_concept/POScn.py surface edges.csv
+    python neo_concept/POScn.py genpos edges.csv 50000
+    python neo_concept/POScn.py poscount edges.csv
 
     # get latest neo4j (tested with neo4j-community-2.2.1)
     curl -O -J -L http://neo4j.com/artifact.php?name=neo4j-community-2.2.1-unix.tar.gz
     tar zxf neo4j-community-2.2.1-unix.tar.gz
 
-    # do only one of the two import commands below. If you calculated the POS tags edges.csv is no longer needed
+    # do only one of the two import commands below. If you calculated the POS tags, edges.csv is no longer needed
 
     # import nodes.csv and edges.csv using the new import tool (NO POS TAGS!) -- this will take a while too
     neo4j-community-2.2.1/bin/neo4j-import --into neo4j-community-2.2.1/data/graph.db --nodes nodes.csv --relationships edges.csv --delimiter "TAB"
