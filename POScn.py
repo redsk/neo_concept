@@ -5,6 +5,7 @@ import cPickle as pickle
 import pexpect
 import sys
 
+POStoIgnore = ["``", ",", "''", "#", "$", ".", "-LRB-", "-RRB-", ":", "LS", "WP$", "os"]
 
 def levenshtein(s1, s2):
     if len(s1) < len(s2):
@@ -44,12 +45,13 @@ class POScn():
         self.relationsWithPOSfilename = self.baseName + 'POS.csv'
         self.snlpOutFilename = self.surfaceTextFilename + ".conll"
         self.snlpOutFilenameBatch = self.surfaceTextFilenameBatch + ".conll"
+        self.POScountFilename = self.baseName + 'POScount.p'
 
         self.batch_size = batch_size
         self.total_size = total_size
 
-#"/c/en/child_car_seat"  "/c/en/backseat_of_car" "/r/AtLocation" 2.0     "/d/conceptnet/4/en"    "*Something you find in [[the backseat of a car]] is [[a child's car seat]]"
-#"/c/en/child_country_home"      "/c/en/unite_state"     "/r/AtLocation" 0.5849625007211562      "/d/dbpedia/en" ""
+#"/c/en/child_car_seat"  "/c/en/backseat_of_car" "/r/AtLocation"      2.0     "/d/conceptnet/4/en"    "*Something you find in [[the backseat of a car]] is [[a child's car seat]]"
+#"/c/en/child_country_home"      "/c/en/unite_state"     "/r/AtLocation"     0.5849625007211562      "/d/dbpedia/en" ""
 
     def getSurfaceTexts(self):
         ef = open(self.inputFilename, "r")
@@ -136,6 +138,40 @@ class POScn():
             print i, stats[i]
             tot = tot + stats[i]
         print tot, 'out of', numberOfLines
+
+    def countAllPOS(self):
+        self.rf = open(self.relationsWithPOSfilename, 'r')
+
+        self.stats = {}
+
+        for line in self.rf:
+            tokens = line.split('\t')
+            if tokens[6] == '':
+                continue
+            else:
+                self.tokens = tokens[6][1:-1] # removing the two quotes
+                self.posCount()
+                self.tokens = tokens[7][1:-2] # removing the two quotes and \n
+                self.posCount()
+
+
+        pickle.dump( self.stats, open(self.POScountFilename, "wb") )
+
+        for t in self.stats:
+            print t, self.stats[t]
+        
+
+
+    def posCount(self):
+        pos = self.tokens.split()
+        for p in pos:
+            if p not in POStoIgnore:
+                if p in self.stats:
+                    self.stats[p] = self.stats[p] + 1
+                else:
+                    self.stats[p] = 1
+
+
 
 
     def generatePOSrelationsFile(self):
@@ -371,6 +407,10 @@ if __name__ == "__main__":
         elif sys.argv[1] == 'genpos':
             poscn = POScn(sys.argv[2], batch_size, total_size)
             poscn.generatePOSrelationsFile()
+        elif sys.argv[1] == 'poscount':
+            poscn = POScn(sys.argv[2], batch_size, total_size)
+            poscn.countAllPOS()
+
         # elif sys.argv[1] == 'count':
         #     poscn = POScn(sys.argv[2])
         #     poscn.countWithSurface()
