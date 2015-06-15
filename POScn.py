@@ -29,7 +29,7 @@ def levenshtein(s1, s2):
 
 
 class POScn():
-    def __init__(self, filename):
+    def __init__(self, filename, batch_size, total_size):
         ################ FILES CONSTANTS
         self.inputFilename = filename
         self.stanfordNLPdir = "../../stanford-corenlp-python/stanford-corenlp-full-2015-01-30"
@@ -44,6 +44,9 @@ class POScn():
         self.relationsWithPOSfilename = self.baseName + 'POS.csv'
         self.snlpOutFilename = self.surfaceTextFilename + ".conll"
         self.snlpOutFilenameBatch = self.surfaceTextFilenameBatch + ".conll"
+
+        self.batch_size = batch_size
+        self.total_size = total_size
 
 #"/c/en/child_car_seat"  "/c/en/backseat_of_car" "/r/AtLocation" 2.0     "/d/conceptnet/4/en"    "*Something you find in [[the backseat of a car]] is [[a child's car seat]]"
 #"/c/en/child_country_home"      "/c/en/unite_state"     "/r/AtLocation" 0.5849625007211562      "/d/dbpedia/en" ""
@@ -92,22 +95,22 @@ class POScn():
 
     def countWithSurface(self):
         rf = None
-        rfCounter = 0
-        rfCounterWithSurface = 0
+        self.rfCounter = 0
+        self.rfCounterWithSurface = 0
 
         try:
             rf = open(self.relationsWithPOSfilename, 'r')
             for line in rf:
-                if relsWithSurface[rfCounter] is True:
-                    rfCounterWithSurface = rfCounterWithSurface + 1
-                rfCounter = rfCounter + 1
+                if relsWithSurface[self.rfCounter] is True:
+                    self.rfCounterWithSurface = self.rfCounterWithSurface + 1
+                self.rfCounter = self.rfCounter + 1
             rf.close()
         except:
             pass
 
 
-        print "rfCounter =", rfCounter
-        print "rfCounterWithSurface = ", rfCounterWithSurface
+        print "self.rfCounter =", self.rfCounter
+        print "self.rfCounterWithSurface = ", self.rfCounterWithSurface
 
     def checkSurfaceTextFile(self, maxCheck = None):
         stats = {}
@@ -135,45 +138,66 @@ class POScn():
         print tot, 'out of', numberOfLines
 
 
-    def generatePOSrelationsFile(self, batch_size = 10000):
-        relsWithSurface = pickle.load( open( self.relsWithSurfaceFilename, "rb" ) )
-        
-        rf = None
-        rfCounter = 0
-        rfCounterWithSurface = 0
+    def generatePOSrelationsFile(self):
+        self.relsWithSurface = pickle.load( open( self.relsWithSurfaceFilename, "rb" ) )
+
+        self.rf = None
+        self.rfCounter = 0
+        self.rfCounterWithSurface = 0
 
         try:
-            rf = open(self.relationsWithPOSfilename, 'r')
-            for line in rf:
-                if relsWithSurface[rfCounter] is True:
-                    rfCounterWithSurface = rfCounterWithSurface + 1
-                rfCounter = rfCounter + 1
-            rf.close()
+            self.rf = open(self.relationsWithPOSfilename, 'r')
+            for line in self.rf:
+                if self.relsWithSurface[self.rfCounter] is True:
+                    self.rfCounterWithSurface = self.rfCounterWithSurface + 1
+                self.rfCounter = self.rfCounter + 1
+            self.rf.close()
         except:
             pass
 
-        rf = open(self.relationsWithPOSfilename, 'a+')
+
+        self.rf = open(self.relationsWithPOSfilename, 'a+')
+        self.nf = open(self.surfaceTextFilename, "r")
+
+        for i in range(0, self.rfCounterWithSurface):
+            self.nf.readline()
 
 
-        print "rfCounter =", rfCounter
-        print "rfCounterWithSurface = ", rfCounterWithSurface
+        while True:
+            print "rfCounter =", self.rfCounter
+            print "rfCounterWithSurface = ", self.rfCounterWithSurface
 
+            self.rfCounter, writtenSurfaceRels = self.generatePOSrelationsFileBatch()
+            self.rfCounterWithSurface = self.rfCounterWithSurface + writtenSurfaceRels
+
+            if self.batch_size == 0: # finished...
+                break
+
+            if self.rfCounterWithSurface == self.total_size:
+                break
+
+        self.nf.close()
+        self.rf.close()
+
+        print "rfCounter =", self.rfCounter
+        print "rfCounterWithSurface = ", self.rfCounterWithSurface
+
+
+
+    def generatePOSrelationsFileBatch(self):
         bf = open(self.surfaceTextFilenameBatch, "w")
-        nf = open(self.surfaceTextFilename, "r")
-        for i in range(0, rfCounterWithSurface):
-            nf.readline()
-
-
-        for i in range(0, batch_size):
-            l = nf.readline()
+        for i in range(0, self.batch_size):
+            l = self.nf.readline()
             if l == '':
-                batch_size = i
+                self.batch_size = i
                 break
             else:
                 bf.write(l)
         bf.close()
-        nf.close()
 
+        if self.batch_size == 0: # we have finished
+            return self.rfCounter, 0
+        
         start_corenlp = 'java -cp "*" -Xmx' + self.java_memory + 'g edu.stanford.nlp.pipeline.StanfordCoreNLP -annotators tokenize,ssplit,pos,lemma -ssplit.eolonly -file ' + self.neoConceptRootForSNLP + self.surfaceTextFilenameBatch + ' -outputFormat conll'
         #print start_corenlp
         corenlp = pexpect.spawn(start_corenlp, cwd=self.stanfordNLPdir)
@@ -188,27 +212,29 @@ class POScn():
 
         sf = open(self.snlpOutFilenameBatch, 'r')
 
-        if rfCounter == 0:
-            rf.write(':START_ID\t:END_ID\t:TYPE\tweight:float\tsource\tsurface\tpos1\tpos2\n')
+        if self.rfCounter == 0:
+            self.rf.write(':START_ID\t:END_ID\t:TYPE\tweight:float\tsource\tsurface\tpos1\tpos2\n')
 
         inf = open(self.inputFilename, "r")
-        for i in range(0, rfCounter):
+        for i in range(0, self.rfCounter):
             inf.readline()
 
         #for i, relLine in enumerate(relationLines):
-        #for n in range(0, batch_size):
+        #for n in range(0, self.batch_size):
         writtenSurfaceRels = 0
         n = 0
         while True:
-            if writtenSurfaceRels == batch_size:
+            if writtenSurfaceRels == self.batch_size:
                 break
-            i = rfCounter + n
+            if self.rfCounterWithSurface + writtenSurfaceRels == self.total_size:
+                break
+            i = self.rfCounter + n
             n = n + 1
             relLine = inf.readline()
-            if i is 0:
+            if i is 0: # it's the header
                 continue
-            if relsWithSurface[i] is False:
-                rf.write(relLine[:-1] + '\t""\t""\n')
+            if self.relsWithSurface[i] is False:
+                self.rf.write(relLine[:-1] + '\t""\t""\n')
             else:
                 writtenSurfaceRels = writtenSurfaceRels + 1
                 relsTokens = relLine.split('\t')
@@ -310,16 +336,15 @@ class POScn():
                 lw1c2 = levenshtein(c2, wordsFirst)
 
                 if (lw1c1 < lw1c2): # they are not inverted
-                    rf.write(relLine[:-1] + '\t"' + POSfirst + '"\t"' + POSsecond + '"\n')
+                    self.rf.write(relLine[:-1] + '\t"' + POSfirst + '"\t"' + POSsecond + '"\n')
                     #rf.write(relLine[:-1] + '\t"' + POSfirst + '"\t"' + POSsecond + '"\t"' + c1 + '"\t"' + c2 + '"\t"' + wordsFirst + '"\t"' + wordsSecond + '"\n')
                 else: # they are inverted!
-                    rf.write(relLine[:-1] + '\t"' + POSsecond + '"\t"' + POSfirst + '"\n')
+                    self.rf.write(relLine[:-1] + '\t"' + POSsecond + '"\t"' + POSfirst + '"\n')
                     #rf.write(relLine[:-1] + '\t"' + POSsecond + '"\t"' + POSfirst + '"\t"' + c1 + '"\t"' + c2 + '"\t"' + wordsFirst + '"\t"' + wordsSecond + '"\n')
 
-
         sf.close()
-        rf.close()
-
+        return i + 1, writtenSurfaceRels # i + 1 because we have already done line i
+        
 
 
 
@@ -341,11 +366,11 @@ if __name__ == "__main__":
 
     if numargs >= 3:
         if sys.argv[1] == 'surface':
-            poscn = POScn(sys.argv[2])
+            poscn = POScn(sys.argv[2], batch_size, total_size)
             poscn.getSurfaceTexts()
         elif sys.argv[1] == 'genpos':
-            poscn = POScn(sys.argv[2])
-            poscn.generatePOSrelationsFile(batch_size, total_size)
+            poscn = POScn(sys.argv[2], batch_size, total_size)
+            poscn.generatePOSrelationsFile()
         # elif sys.argv[1] == 'count':
         #     poscn = POScn(sys.argv[2])
         #     poscn.countWithSurface()
