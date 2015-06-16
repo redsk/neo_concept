@@ -18,12 +18,12 @@ Optionally, it is possible to perform Part-Of-Speech (POS) tagging of the two co
 Pre-Requisites
 --------------
 
-- neo4j version 2.2.1 (needed for the [new import tool](http://neo4j.com/docs/2.2.1/import-tool.html))
+- neo4j version 2.2.2 (needed for the [new import tool](http://neo4j.com/docs/2.2.2/import-tool.html))
 - [ConceptNet 5.3](http://conceptnet5.media.mit.edu/downloads/current/) provides a list of assertions
 - regular Python, no dependencies
 - optionally, latest version of [Stanford CoreNLP](http://nlp.stanford.edu/software/corenlp.shtml)
 
-Tested with neo4j-community-2.2.1.
+Tested with neo4j-community-2.2.2.
 
 How-To 
 -------------------
@@ -52,20 +52,20 @@ How-To
     python neo_concept/POScn.py genpos edges.csv 50000
     python neo_concept/POScn.py poscount edges.csv
 
-    # get latest neo4j (tested with neo4j-community-2.2.1)
-    curl -O -J -L http://neo4j.com/artifact.php?name=neo4j-community-2.2.1-unix.tar.gz
-    tar zxf neo4j-community-2.2.1-unix.tar.gz
+    # get latest neo4j (tested with neo4j-community-2.2.2)
+    curl -O -J -L http://neo4j.com/artifact.php?name=neo4j-community-2.2.2-unix.tar.gz
+    tar zxf neo4j-community-2.2.2-unix.tar.gz
 
     # do only one of the two import commands below. If you calculated the POS tags, edges.csv is no longer needed
 
     # import nodes.csv and edges.csv using the new import tool (NO POS TAGS!) -- this will take a while too
-    neo4j-community-2.2.1/bin/neo4j-import --into neo4j-community-2.2.1/data/graph.db --nodes nodes.csv --relationships edges.csv --delimiter "TAB"
+    neo4j-community-2.2.2/bin/neo4j-import --into neo4j-community-2.2.2/data/graph.db --nodes nodes.csv --relationships edges.csv --delimiter "TAB"
 
     # import nodes.csv and edges.csv using the new import tool (WITH POS TAGS!) -- this will take a while too
-    neo4j-community-2.2.1/bin/neo4j-import --into neo4j-community-2.2.1/data/graph.db --nodes nodes.csv --relationships edgesPOS.csv --delimiter "TAB"
+    neo4j-community-2.2.2/bin/neo4j-import --into neo4j-community-2.2.2/data/graph.db --nodes nodes.csv --relationships edgesPOS.csv --delimiter "TAB"
 
     # start neo4j
-    neo4j-community-2.2.1/bin/neo4j start
+    neo4j-community-2.2.2/bin/neo4j start
 
 
 Goto localhost:7474 to see the graph. Create and index on Concepts for performance reasons:
