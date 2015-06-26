@@ -21,7 +21,7 @@ Pre-Requisites
 - neo4j version 2.2.2 (needed for the [new import tool](http://neo4j.com/docs/2.2.2/import-tool.html))
 - [ConceptNet 5.3](http://conceptnet5.media.mit.edu/downloads/current/) provides a list of assertions
 - regular Python, no dependencies
-- optionally, latest version of [Stanford CoreNLP](http://nlp.stanford.edu/software/corenlp.shtml)
+- optionally, the latest version of [Stanford CoreNLP](http://nlp.stanford.edu/software/corenlp.shtml)
 
 Tested with neo4j-community-2.2.2.
 
