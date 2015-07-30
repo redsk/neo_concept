@@ -7,11 +7,11 @@ This project was inspired by [a post from Max De Marzi](http://maxdemarzi.com/20
 This rewrite does not use the [Bloom filter](http://en.wikipedia.org/wiki/Bloom_filter) anymore as according to ConceptNet wiki [the uri is unique among assertions](https://github.com/commonsense/conceptnet5/wiki/Edges) and [the provided CSV files](http://conceptnet5.media.mit.edu/downloads/current/) provide a list of assertions. 
 
 This software adds relations to nodes in the same hierarchy. For instance, if we have nodes
-A: "/c/en/able"
-B: "/c/en/able/a/having_the_necessary_means_or_skill_or_know-how_or_authority_to_do_something"
+- A: "/c/en/able"
+- B: "/c/en/able/a/having_the_necessary_means_or_skill_or_know-how_or_authority_to_do_something"
 normally the latter is **not** connected with the former with a relation. Therefore, we add among these two nodes the following two relations with weight 10.0:
-A /r/DownHierarchy B
-B /r/UpHierarchy A
+- A /r/DownHierarchy B
+- B /r/UpHierarchy A
 
 Optionally, it is possible to perform Part-Of-Speech (POS) tagging of the two concepts within the surface text of every relation with the Stanford CoreNLP software. 
 
@@ -58,7 +58,7 @@ How-To
 
     # do only one of the two import commands below. If you calculated the POS tags, edges.csv is no longer needed
 
-    # import nodes.csv and edges.csv using the new import tool (NO POS TAGS!) -- this will take a while too
+    # import nodes.csv and edges.csv using the new import tool (WITHOUT POS TAGS!) -- this will take a while too
     neo4j-community-2.2.2/bin/neo4j-import --into neo4j-community-2.2.2/data/graph.db --nodes nodes.csv --relationships edges.csv --delimiter "TAB"
 
     # import nodes.csv and edges.csv using the new import tool (WITH POS TAGS!) -- this will take a while too
