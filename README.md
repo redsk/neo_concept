@@ -6,15 +6,15 @@ This project was inspired by [a post from Max De Marzi](http://maxdemarzi.com/20
 
 This rewrite does not use the [Bloom filter](http://en.wikipedia.org/wiki/Bloom_filter) anymore as according to ConceptNet wiki [the uri is unique among assertions](https://github.com/commonsense/conceptnet5/wiki/Edges) and [the provided CSV files](http://conceptnet5.media.mit.edu/downloads/current/) provide a list of assertions. 
 
-This software adds relations to nodes in the same hierarchy. For instance, if we have nodes
+Moreover, this software adds relations to nodes in the same hierarchy. For instance, if we have nodes
 - A: "/c/en/able"
 - B: "/c/en/able/a/having_the_necessary_means_or_skill_or_know-how_or_authority_to_do_something"
 
-normally the latter is **not** connected with the former with a relation. Therefore, we add among these two nodes the following two relations with weight 10.0:
+normally the latter is **not** connected to the former with a relation. Therefore, we add the following two relations with weight 10.0 between these two nodes:
 - A /r/DownHierarchy B
 - B /r/UpHierarchy A
 
-Optionally, it is possible to perform Part-Of-Speech (POS) tagging of the two concepts within the surface text of every relation with the Stanford CoreNLP software. 
+Optionally, it is possible to perform Part-Of-Speech (POS) tagging of the two concepts within the surface text of every relation by means of the Stanford CoreNLP software. 
 
 Pre-Requisites
 --------------
