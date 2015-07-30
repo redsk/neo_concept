@@ -9,6 +9,7 @@ This rewrite does not use the [Bloom filter](http://en.wikipedia.org/wiki/Bloom_
 This software adds relations to nodes in the same hierarchy. For instance, if we have nodes
 - A: "/c/en/able"
 - B: "/c/en/able/a/having_the_necessary_means_or_skill_or_know-how_or_authority_to_do_something"
+
 normally the latter is **not** connected with the former with a relation. Therefore, we add among these two nodes the following two relations with weight 10.0:
 - A /r/DownHierarchy B
 - B /r/UpHierarchy A
