@@ -1,7 +1,7 @@
 Neo_Concept
 -----------
 
-This software helps to import the ConceptNet dataset (version tested: 5.3) to neo4j 2.2. 
+This software imports the ConceptNet Knowledge Base (version tested: 5.3) into neo4j 2.2.2. 
 This project was inspired by [a post from Max De Marzi](http://maxdemarzi.com/2013/05/13/knowledge-bases-in-neo4j/) who also provided [the original software](https://github.com/maxdemarzi/neo_concept).
 
 This rewrite does not use the [Bloom filter](http://en.wikipedia.org/wiki/Bloom_filter) anymore as according to ConceptNet wiki [the uri is unique among assertions](https://github.com/commonsense/conceptnet5/wiki/Edges) and [the provided CSV files](http://conceptnet5.media.mit.edu/downloads/current/) provide a list of assertions. 
@@ -15,6 +15,8 @@ normally the latter is **not** connected to the former with a relation. Therefor
 - B /r/UpHierarchy A
 
 Optionally, it is possible to perform Part-Of-Speech (POS) tagging of the two concepts within the surface text of every relation by means of the Stanford CoreNLP software. 
+
+- NEW!: Check out [Neo_Wordnet](https://github.com/redsk/neo_wordnet) to import Wordnet into neo4j!
 
 Pre-Requisites
 --------------
