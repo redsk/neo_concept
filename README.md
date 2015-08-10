@@ -10,7 +10,7 @@ Moreover, this software adds relations to nodes in the same hierarchy. For insta
 - A: "/c/en/able"
 - B: "/c/en/able/a/having_the_necessary_means_or_skill_or_know-how_or_authority_to_do_something"
 
-normally the latter is **not** connected to the former with a relation. Therefore, we add the following two relations with weight 10.0 between these two nodes:
+normally A and B are **not** connected through a relation. Therefore, we add the following two relations with weight 10.0 between these two nodes:
 - A /r/DownHierarchy B
 - B /r/UpHierarchy A
 
