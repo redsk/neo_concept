@@ -17,6 +17,7 @@ normally the latter is **not** connected to the former with a relation. Therefor
 Optionally, it is possible to perform Part-Of-Speech (POS) tagging of the two concepts within the surface text of every relation by means of the Stanford CoreNLP software. 
 
 - NEW!: Check out [Neo_Wordnet](https://github.com/redsk/neo_wordnet) to import Wordnet into neo4j!
+- NEW!: Check out [Neo_Merger](https://github.com/redsk/neo_merger) to import Conceptnet and Wordnet into the same neo4j graph!
 
 Pre-Requisites
 --------------
