@@ -33,8 +33,8 @@ class POScn():
     def __init__(self, filename, batch_size, total_size):
         ################ FILES CONSTANTS
         self.inputFilename = filename
-        self.stanfordNLPdir = "../../stanford-corenlp-python/stanford-corenlp-full-2015-01-30"
-        self.neoConceptRootForSNLP = '../../neo4j-conceptnet5/converter/'
+        self.stanfordNLPdir = "../stanford-corenlp-python/stanford-corenlp-full-2015-01-30"
+        self.neoConceptRootForSNLP = '../../neo4j-kbs/conceptnet/'
         self.java_memory = '2' # in GB
         ################
 
@@ -436,7 +436,7 @@ if __name__ == "__main__":
 
 
     if numargs < 3 or numargs > 5:
-       print "Usage:\npython POScn.py {surface, genpos} <input file> [batch_size]\n"
+       print "Usage:\npython POScn.py {surface, genpos, poscount} <input file> [batch_size]\n"
     #main()
 
 

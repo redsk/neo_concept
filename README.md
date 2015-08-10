@@ -31,29 +31,32 @@ Tested with neo4j-community-2.2.2.
 How-To 
 -------------------
 
-    mkdir neo-conceptnet5
-    cd neo-conceptnet5
+    mkdir neo4j-kbs
+    cd neo4j-kbs
     git clone https://github.com/redsk/neo_concept.git
 
     # get latest conceptnet from http://conceptnet5.media.mit.edu/downloads/
+    mkdir conceptnet
+    cd concepnet
     wget http://conceptnet5.media.mit.edu/downloads/current/conceptnet5_flat_csv_5.3.tar.bz2
     tar jxvf conceptnet5_flat_csv_5.3.tar.bz2
     ln -s csv_<version> csv_current
+    cd ..
 
     # Usage:
     # python convertcn.py <input directory> [ALL_LANGUAGES]
     # If the flag ALL_LANGUAGES is not set, only English concepts will be converted
     # this will take a while
-    python neo_concept/convertcn.py csv_current/assertions/
+    python neo_concept/convertcn.py conceptnet/csv_current/assertions/
 
     # optionally, you can get the POS tags. This assumes that stanford nlp is installed in
-    # stanfordNLPdir = "../../stanford-corenlp-python/stanford-corenlp-full-2015-01-30"
-    # neoConceptRootForSNLP = '../../neo4j-conceptnet5/converter/'
+    # stanfordNLPdir = "../stanford-corenlp-python/stanford-corenlp-full-2015-01-30"
+    # neoConceptRootForSNLP = '../../neo4j-kbs/conceptnet/'
     # modify the two variables above in POScn.py to fit your stanford nlp installation
     # the following commands will take a while and were tested with a java memory of 2GB
-    python neo_concept/POScn.py surface edges.csv
-    python neo_concept/POScn.py genpos edges.csv 50000
-    python neo_concept/POScn.py poscount edges.csv
+    python neo_concept/POScn.py surface conceptnet/edges.csv
+    python neo_concept/POScn.py genpos conceptnet/edges.csv 50000
+    python neo_concept/POScn.py poscount conceptnet/edges.csv
 
     # get latest neo4j (tested with neo4j-community-2.2.2)
     curl -O -J -L http://neo4j.com/artifact.php?name=neo4j-community-2.2.2-unix.tar.gz
@@ -62,10 +65,10 @@ How-To
     # do only one of the two import commands below. If you calculated the POS tags, edges.csv is no longer needed
 
     # import nodes.csv and edges.csv using the new import tool (WITHOUT POS TAGS!) -- this will take a while too
-    neo4j-community-2.2.2/bin/neo4j-import --into neo4j-community-2.2.2/data/graph.db --nodes nodes.csv --relationships edges.csv --delimiter "TAB"
+    neo4j-community-2.2.2/bin/neo4j-import --into neo4j-community-2.2.2/data/graph.db --nodes conceptnet/nodes.csv --relationships conceptnet/edges.csv --delimiter "TAB"
 
     # import nodes.csv and edges.csv using the new import tool (WITH POS TAGS!) -- this will take a while too
-    neo4j-community-2.2.2/bin/neo4j-import --into neo4j-community-2.2.2/data/graph.db --nodes nodes.csv --relationships edgesPOS.csv --delimiter "TAB"
+    neo4j-community-2.2.2/bin/neo4j-import --into neo4j-community-2.2.2/data/graph.db --nodes conceptnet/nodes.csv --relationships conceptnet/edgesPOS.csv --delimiter "TAB"
 
     # start neo4j
     neo4j-community-2.2.2/bin/neo4j start
