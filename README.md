@@ -59,6 +59,12 @@ How-To
     python neo_concept/POScn.py genpos conceptnet/edges.csv 50000
     python neo_concept/POScn.py poscount conceptnet/edges.csv
 
+    # If you are interested in a getting the Set of the relations' types then do:
+    python neo_conceptnet/relsSet.py
+    # From a python shell you can load that set by doing:
+    import cPickle as pickle
+    relsSet = pickle.load(open( "../conceptnet/relsSet.p", "rb" ) )
+
     # get latest neo4j (tested with neo4j-community-2.2.2)
     curl -O -J -L http://neo4j.com/artifact.php?name=neo4j-community-2.2.2-unix.tar.gz
     tar zxf neo4j-community-2.2.2-unix.tar.gz
